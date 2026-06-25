@@ -235,10 +235,20 @@ class Handler(BaseHTTPRequestHandler):
             self.send_error(404)
             return
         data = p.read_bytes()
-        ct = "text/html; charset=utf-8" if name.endswith(".html") else "text/plain"
+        if name.endswith(".html"):
+            ct = "text/html; charset=utf-8"
+        elif name.endswith(".svg"):
+            ct = "image/svg+xml"
+        elif name.endswith(".png"):
+            ct = "image/png"
+        elif name.endswith(".ico"):
+            ct = "image/x-icon"
+        else:
+            ct = "text/plain"
         self.send_response(200)
         self.send_header("Content-Type", ct)
         self.send_header("Content-Length", str(len(data)))
+        self.send_header("Cache-Control", "max-age=3600")
         self.end_headers()
         self.wfile.write(data)
 
@@ -251,7 +261,9 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         path = urlparse(self.path).path
-        if path == "/api/status":
+        if path.startswith("/logos/") and ".." not in path:
+            self._file(path.lstrip("/"))
+        elif path == "/api/status":
             self._json({"running": get_status(), "projects": PROJECTS})
         elif path in ("/", "/index.html"):
             self._file("index.html")

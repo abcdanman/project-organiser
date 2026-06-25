@@ -1,10 +1,9 @@
 @echo off
 title FYP Project Hub
-netstat -an 2>nul | find "8765" | find "LISTEN" >nul 2>&1
-if %errorlevel%==0 (
-    start "" "http://localhost:8765"
-) else (
-    start /B python "%~dp0server.py"
-    timeout /t 2 /nobreak >nul
-    start "" "http://localhost:8765"
+cd /d "%~dp0"
+python -c "import pywebview" >nul 2>&1
+if %errorlevel% neq 0 (
+    echo Installing pywebview (first run only)...
+    pip install pywebview --quiet
 )
+pythonw app.py
