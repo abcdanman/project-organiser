@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Organiser — FYP UM</title>
+<style>
+  :root {
+    --bg: #f5f5f0;
+    --surface: #ffffff;
+    --surface2: #f0efe9;
+    --border: rgba(0,0,0,0.1);
+    --text: #1a1a18;
+    --text2: #6b6b65;
+    --text3: #9b9b94;
+    --accent: #5340d1;
+    --accent-bg: #eeedfe;
+    --accent-text: #3c3489;
+    --green: #0f6e56;
+    --green-bg: #e1f5ee;
+    --amber: #854f0b;
+    --amber-bg: #faeeda;
+    --red: #a32d2d;
+    --red-bg: #fcebeb;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  [data-theme="dark"] {
+    --bg: #1a1a18;
+    --surface: #252523;
+    --surface2: #2e2e2b;
+    --border: rgba(255,255,255,0.08);
+    --text: #f0efe9;
+    --text2: #a0a099;
+    --text3: #6b6b65;
+    --accent: #7f77dd;
+    --accent-bg: #26215c;
+    --accent-text: #afa9ec;
+    --green: #5dcaa5;
+    --green-bg: #04342c;
+    --amber: #ef9f27;
+    --amber-bg: #412402;
+    --red: #f09595;
+    --red-bg: #501313;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; font-size: 14px; }
+
+  /* Sidebar */
+  #sidebar { width: 260px; min-height: 100vh; background: var(--surface); border-right: 0.5px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+  .sidebar-header { padding: 20px 16px 12px; border-bottom: 0.5px solid var(--border); }
+  .sidebar-title { font-size: 15px; font-weight: 600; color: var(--text); }
+  .sidebar-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
+  .sidebar-search { margin: 10px 12px; position: relative; }
+  .sidebar-search input { width: 100%; background: var(--surface2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 7px 10px 7px 30px; font-size: 13px; color: var(--text); outline: none; }
+  .sidebar-search input::placeholder { color: var(--text3); }
+  .sidebar-search svg { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--text3); }
+  .sidebar-section { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; padding: 12px 16px 4px; }
+  .proj-item { display: flex; align-items: center; gap: 9px; padding: 8px 16px; cursor: pointer; border-radius: 0; transition: background 0.1s; }
+  .proj-item:hover { background: var(--surface2); }
+  .proj-item.active { background: var(--accent-bg); color: var(--accent-text); }
+  .proj-item.active .proj-item-name { color: var(--accent); }
+  .proj-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .proj-item-name { font-size: 13px; font-weight: 500; color: var(--text); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .proj-item-size { font-size: 11px; color: var(--text3); }
+  .sidebar-footer { margin-top: auto; padding: 12px 16px; border-top: 0.5px solid var(--border); }
+  .theme-toggle { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); cursor: pointer; background: none; border: none; color: var(--text2); }
+
+  /* Main */
+  #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .topbar { display: flex; align-items: center; gap: 12px; padding: 14px 24px; border-bottom: 0.5px solid var(--border); background: var(--surface); }
+  .topbar-title { font-size: 15px; font-weight: 600; flex: 1; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--radius-sm); border: 0.5px solid var(--border); background: var(--surface); color: var(--text); font-size: 13px; cursor: pointer; transition: background 0.1s; white-space: nowrap; }
+  .btn:hover { background: var(--surface2); }
+  .btn-accent { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-accent:hover { opacity: 0.9; background: var(--accent); }
+  .content { flex: 1; overflow-y: auto; padding: 24px; }
+
+  /* Project detail */
+  .proj-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+  .proj-icon-lg { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+  .proj-title { font-size: 22px; font-weight: 600; }
+  .proj-desc { font-size: 13px; color: var(--text2); margin-top: 4px; }
+  .badge-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .badge { font-size: 11px; padding: 3px 10px; border-radius: 99px; font-weight: 500; }
+  .badge-neutral { background: var(--surface2); color: var(--text2); border: 0.5px solid var(--border); }
+  .badge-green { background: var(--green-bg); color: var(--green); }
+  .badge-amber { background: var(--amber-bg); color: var(--amber); }
+  .badge-red { background: var(--red-bg); color: var(--red); }
+  .badge-accent { background: var(--accent-bg); color: var(--accent-text); }
+
+  .section-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stat-card { background: var(--surface2); border-radius: var(--radius-sm); padding: 14px; }
+  .stat-val { font-size: 20px; font-weight: 600; }
+  .stat-lbl { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+  .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 14px; }
+  .card-title { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .card-body { font-size: 14px; color: var(--text); line-height: 1.7; }
+  .card-body ul { padding-left: 18px; }
+  .card-body li { margin-bottom: 6px; }
+  .card-body li::marker { color: var(--accent); }
+
+  /* AI analysis section */
+  .ai-box { border: 0.5px solid var(--accent); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 14px; background: var(--accent-bg); }
+  .ai-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .ai-label { font-size: 13px; font-weight: 600; color: var(--accent-text); display: flex; align-items: center; gap: 8px; }
+  .ai-content { font-size: 14px; color: var(--text); line-height: 1.7; }
+  .ai-content h4 { font-size: 13px; font-weight: 600; margin: 14px 0 6px; color: var(--accent-text); }
+  .ai-content ul { padding-left: 18px; }
+  .ai-content li { margin-bottom: 5px; }
+  .ai-placeholder { color: var(--text3); font-style: italic; }
+
+  /* API key modal */
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: flex; align-items: center; justify-content: center; }
+  .modal { background: var(--surface); border-radius: var(--radius); padding: 28px; width: 420px; max-width: 90vw; border: 0.5px solid var(--border); }
+  .modal h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  .modal p { font-size: 13px; color: var(--text2); margin-bottom: 16px; line-height: 1.6; }
+  .modal input { width: 100%; background: var(--surface2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 13px; color: var(--text); font-family: monospace; outline: none; margin-bottom: 12px; }
+  .modal-footer { display: flex; gap: 8px; justify-content: flex-end; }
+
+  /* Loading spinner */
+  .spinner { width: 18px; height: 18px; border: 2px solid var(--accent-bg); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Home screen */
+  .home-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .home-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 16px; cursor: pointer; transition: border-color 0.15s, transform 0.1s; }
+  .home-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .home-card-icon { font-size: 24px; margin-bottom: 10px; }
+  .home-card-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .home-card-meta { font-size: 12px; color: var(--text3); }
+  .home-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body data-theme="light">
+
+<!-- Sidebar -->
+<div id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">📁 Project Organiser</div>
+    <div class="sidebar-sub">FYP UM — 14 projects</div>
+  </div>
+  <div class="sidebar-search">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="search" placeholder="Search projects..." oninput="filterProjects(this.value)">
+  </div>
+  <div class="sidebar-section">Web & Apps</div>
+  <div id="sidebar-web"></div>
+  <div class="sidebar-section">Tools & Scripts</div>
+  <div id="sidebar-tools"></div>
+  <div class="sidebar-footer">
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <span id="theme-icon">🌙</span> <span id="theme-label">Dark mode</span>
+    </button>
+  </div>
+</div>
+
+<!-- Main content -->
+<div id="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">Overview</div>
+    <button class="btn" onclick="showApiKeyModal()">🔑 <span id="key-status">Set API Key</span></button>
+    <button class="btn btn-accent" id="analyse-btn" onclick="analyseProject()" style="display:none">✨ Analyse with AI</button>
+  </div>
+  <div class="content" id="content">
+    <!-- Home view injected here -->
+  </div>
+</div>
+
+<!-- API Key Modal -->
+<div class="overlay hidden" id="key-modal">
+  <div class="modal">
+    <h3>🔑 Set Claude API Key</h3>
+    <p>Enter your Anthropic API key to enable AI analysis. The key is stored only in your browser and never sent anywhere except Anthropic's API.</p>
+    <input type="password" id="key-input" placeholder="sk-ant-..." />
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-accent" onclick="saveKey()">Save & Enable AI</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PROJECTS = [
+  {
+    id: "antigravity-yapping",
+    name: "Antigravity Yapping",
+    icon: "💬",
+    category: "web",
+    tech: ["React", "Node.js", "Vite", "Tailwind"],
+    size: "160 MB",
+    status: "active",
+    github: "https://github.com/abcdanman/Outbound-UM",
+    description: "Full-stack social/chat web application with a React frontend and Express/Node.js backend. Uses a database via Knex with migrations and seeding.",
+    runCmd: "cd frontend && npm run dev   (backend: cd backend && node index.js)",
+    overview: "A web app built with React (Vite) on the front end and Express.js on the backend. Has middleware, database migrations, file uploads support, and a RESTful API structure.",
+    limitations: [
+      "Runs as two separate processes (frontend + backend must be started individually)",
+      "No Docker or one-command startup",
+      "Upload folder is tracked in git — large files could bloat the repo"
+    ],
+    next: [
+      "Add a root-level start script to launch both services together",
+      "Add .env.example so collaborators know what variables to set",
+      "Add authentication if not already present"
+    ]
+  },
+  {
+    id: "testing-yapping",
+    name: "Testing Yapping (SOP)",
+    icon: "🧪",
+    category: "web",
+    tech: ["React", "Express", "Supabase", "Tailwind"],
+    size: "76 MB",
+    status: "dev",
+    github: null,
+    description: "Standard Operating Procedure web app (sop-frontend / sop-backend). Uses Supabase as database. Appears to be an active development version separate from Antigravity Yapping.",
+    runCmd: "cd frontend && npm run dev   (backend: cd backend && node server.js)",
+    overview: "Full-stack SOP management tool. Frontend is React + Vite + Tailwind. Backend is Express with JWT auth, file uploads via Multer, and Supabase as the database layer.",
+    limitations: [
+      "No git repo — not version controlled yet",
+      "Supabase schema SQL file present but setup instructions missing",
+      ".env has real credentials — needs .env.example"
+    ],
+    next: [
+      "Initialise git and push to GitHub",
+      "Add README with setup instructions",
+      "Add Supabase migration guide to the README"
+    ]
+  },
+  {
+    id: "jomcuti-app",
+    name: "JomCuti App",
+    icon: "🏖️",
+    category: "web",
+    tech: ["Next.js 15", "React", "Tailwind", "TypeScript"],
+    size: "693 MB",
+    status: "active",
+    github: null,
+    description: "Leave/holiday management web app built with Next.js 15. Has web-push notifications support. Large due to node_modules.",
+    runCmd: "npm run dev",
+    overview: "Next.js 15 application for managing leave/cuti (holiday) requests. Uses Tailwind v4, TypeScript, Cheerio for scraping, and web-push for notifications.",
+    limitations: [
+      "Has git but no GitHub remote set — code could be lost",
+      "node_modules is 690+ MB and bloats the folder",
+      "No README or setup documentation"
+    ],
+    next: [
+      "Add GitHub remote and push",
+      "Add a proper README with setup instructions",
+      "Add .env.example for required environment variables"
+    ]
+  },
+  {
+    id: "um-waze",
+    name: "UM Waze",
+    icon: "🗺️",
+    category: "web",
+    tech: ["React Native", "Expo", "TypeScript"],
+    size: "362 MB",
+    status: "active",
+    github: "https://github.com/fidelismee/um-waze",
+    description: "Campus navigation mobile app built with React Native and Expo. Navigation/routing app for University of Malaya campus.",
+    runCmd: "npx expo start",
+    overview: "React Native + Expo app for UM campus navigation. TypeScript-based, has a metro bundler config and proper project structure with src/ folder.",
+    limitations: [
+      "On a collaborator's GitHub account (fidelismee), not yours",
+      "No offline map support noted",
+      "node_modules bloats disk usage"
+    ],
+    next: [
+      "Fork to your own GitHub account (abcdanman)",
+      "Add campus map data and POI markers",
+      "Add offline capability for areas with poor signal"
+    ]
+  },
+  {
+    id: "snapchallenge",
+    name: "Snap Challenge",
+    icon: "📸",
+    category: "web",
+    tech: ["Flutter", "Firebase", "Dart"],
+    size: "1.2 GB",
+    status: "active",
+    github: "https://github.com/zhanas12/snapchallenge",
+    description: "Daily photo challenge community mobile app built with Flutter. Firebase backend for auth, storage, and Firestore. Full-featured with notifications and geolocation.",
+    runCmd: "flutter run",
+    overview: "Flutter mobile app for daily photo challenges. Uses Firebase Auth, Firestore, Storage, and push notifications. Has Provider state management and a well-structured lib/ folder.",
+    limitations: [
+      "On collaborator's GitHub (zhanas12), not your account",
+      "snapchallenge-1 is an exact duplicate taking 2.5 GB — safe to delete",
+      "No CI/CD pipeline"
+    ],
+    next: [
+      "Delete snapchallenge-1 to recover 2.5 GB",
+      "Fork to your own GitHub account",
+      "Add app flavors for dev/prod environments"
+    ]
+  },
+  {
+    id: "um-eagle-eye",
+    name: "UM Eagle Eye (EBSI)",
+    icon: "👁️",
+    category: "web",
+    tech: ["Cloudflare Workers", "Agents SDK", "EBSI"],
+    size: "868 MB",
+    status: "forked",
+    github: "https://github.com/ndriannazriel/UMEagleEye-FORKED-FOR-EBSI",
+    description: "Forked project for EBSI (European Blockchain Services Infrastructure) use case. Uses Cloudflare Workers and agent framework. Related to the EBSI Use Case diagram in the folder root.",
+    runCmd: "wrangler dev (Cloudflare Workers)",
+    overview: "A Cloudflare Workers / Agents SDK project adapted for EBSI blockchain credential verification. Has agent/, EBSI/ subfolders and multiple wrangler log files.",
+    limitations: [
+      "Forked from someone else's repo — your changes not tracked separately",
+      "Multiple wrangler log files suggest failed deploys",
+      "EBSI integration may require specific EU blockchain network access"
+    ],
+    next: [
+      "Create your own fork under abcdanman",
+      "Clean up wrangler.log files",
+      "Document the EBSI integration steps in README"
+    ]
+  },
+  {
+    id: "game",
+    name: "Game (Meme Master)",
+    icon: "🎮",
+    category: "web",
+    tech: ["HTML", "CSS", "JavaScript"],
+    size: "0.2 MB",
+    status: "active",
+    github: "https://github.com/abcdanman/Meme-Master",
+    description: "Browser-based game with multiplayer support. Multiple HTML pages: game, multiplayer, profile, settings. Pure HTML/JS, no build step needed.",
+    runCmd: "Open index.html in browser",
+    overview: "Static HTML/CSS/JS browser game. Includes multiplayer.html suggesting peer-to-peer or server-based multiplayer. Very lightweight — no dependencies.",
+    limitations: [
+      "Static files — multiplayer may require a signalling server",
+      "No bundler or minification",
+      "No mobile responsiveness may be limited"
+    ],
+    next: [
+      "Add a simple WebSocket server for true multiplayer",
+      "Deploy to GitHub Pages for free hosting",
+      "Add touch controls for mobile"
+    ]
+  },
+  {
+    id: "dr-trader",
+    name: "Dr Trader",
+    icon: "📈",
+    category: "tools",
+    tech: ["Python", "Flask/FastAPI"],
+    size: "0.2 MB",
+    status: "active",
+    github: "https://github.com/abcdanman/Dr-Trader",
+    description: "Trading alert/monitoring tool with a web app interface. Python backend with check_alerts.py script and a Flask/FastAPI app/ folder.",
+    runCmd: "python check_alerts.py  or  run.bat",
+    overview: "Python-based trading alert system. Has a main app/ directory suggesting a web UI, a separate check_alerts.py entry point, and .env for API keys (broker/exchange credentials).",
+    limitations: [
+      "Likely needs API keys for broker or data provider",
+      "No scheduler — alerts must be manually triggered unless using cron/task scheduler",
+      "No GUI — terminal-based"
+    ],
+    next: [
+      "Add Windows Task Scheduler integration to run automatically",
+      "Add a simple Tkinter or web GUI for non-technical users",
+      "Add Telegram/email notification support"
+    ]
+  },
+  {
+    id: "game-optimizer",
+    name: "Game Optimizer",
+    icon: "⚡",
+    category: "tools",
+    tech: ["Python", "Tkinter"],
+    size: "0.2 MB",
+    status: "active",
+    github: null,
+    description: "Windows game performance optimiser with a Python GUI (Tkinter). Has a custom icon and a launch.bat file. Optimises system settings before gaming.",
+    runCmd: "launch.bat  or  python game_optimizer.py",
+    overview: "Python desktop tool that optimises Windows settings for gaming (likely: process priority, power plan, RAM cleaner). Has Tkinter GUI and a custom icon.",
+    limitations: [
+      "No git repo or GitHub backup",
+      "Likely needs admin privileges to modify system settings",
+      "Windows-only"
+    ],
+    next: [
+      "Initialise git and push to GitHub",
+      "Add a manifest.xml for UAC elevation request",
+      "Package as a standalone .exe with PyInstaller"
+    ]
+  },
+  {
+    id: "gmail-bot",
+    name: "Gmail Bot",
+    icon: "📧",
+    category: "tools",
+    tech: ["Python", "Gmail API", "MCP"],
+    size: "<1 MB",
+    status: "active",
+    github: "https://github.com/abcdanman/Gmail-Bot",
+    description: "Gmail automation bot using the Gmail API and MCP (Model Context Protocol). Cleans Gmail inbox automatically.",
+    runCmd: "python gmail_cleaner_mcp.py",
+    overview: "Python MCP server that integrates with Gmail API for automated email management. Has credentials.json for OAuth2 and MCP protocol support for Claude integration.",
+    limitations: [
+      "credentials.json should NOT be committed to GitHub",
+      "Requires Gmail OAuth2 flow on first run",
+      "MCP server requires Claude Desktop to connect"
+    ],
+    next: [
+      "Add credentials.json to .gitignore if not already",
+      "Add README explaining MCP setup",
+      "Add more cleaning rules (unsubscribe, archive by label)"
+    ]
+  },
+  {
+    id: "otonoco-compliance",
+    name: "Otonoco Compliance",
+    icon: "✅",
+    category: "tools",
+    tech: ["Python", "FastAPI", "AI"],
+    size: "<1 MB",
+    status: "active",
+    github: null,
+    description: "AI-powered compliance document agent. FastAPI backend with file ingestion, extraction, and a static frontend. Has start.bat for easy launch.",
+    runCmd: "start.bat  or  python main.py",
+    overview: "Python FastAPI compliance checking agent. Uses AI to ingest documents (ingester.py), extract compliance info (extractor.py), and store in a local database (database.py). Has a static web UI.",
+    limitations: [
+      "No git repo — code not version controlled",
+      "Relies on .env for AI API keys — setup not documented",
+      "SQLite database file likely in project folder — not suitable for production"
+    ],
+    next: [
+      "Initialise git and push to GitHub",
+      "Add Docker support for easy deployment",
+      "Add a proper README with setup instructions"
+    ]
+  },
+  {
+    id: "storage-cleaner",
+    name: "Storage Cleaner",
+    icon: "🧹",
+    category: "tools",
+    tech: ["Python"],
+    size: "0.1 MB",
+    status: "active",
+    github: null,
+    description: "Python utility to clean up storage on Windows. Has run.bat for easy execution.",
+    runCmd: "run.bat  or  python storage_cleaner.py",
+    overview: "Simple Python script to identify and remove unnecessary files on Windows. Likely targets temp files, log files, or specific patterns.",
+    limitations: [
+      "No git repo",
+      "No preview/dry-run mode — could accidentally delete files",
+      "No GUI"
+    ],
+    next: [
+      "Add a dry-run flag to show what would be deleted before deleting",
+      "Add a GUI or interactive prompt",
+      "Initialise git and push to GitHub"
+    ]
+  },
+  {
+    id: "telegram-wakeup",
+    name: "Telegram Wake Up",
+    icon: "⏰",
+    category: "tools",
+    tech: ["HTML", "Telegram Bot API"],
+    size: "<1 MB",
+    status: "active",
+    github: "https://github.com/abcdanman/wake-up-alert",
+    description: "Telegram bot configuration UI. A single HTML page to configure wake-up alert settings sent via Telegram.",
+    runCmd: "Open config-form.html in browser",
+    overview: "Single-page HTML config form for a Telegram wake-up alert bot. Likely submits settings to a Telegram bot token endpoint.",
+    limitations: [
+      "Single HTML file — limited functionality",
+      "Bot token may be embedded in the page",
+      "No persistence — settings may reset on refresh"
+    ],
+    next: [
+      "Add localStorage to persist settings",
+      "Move bot token to a server-side proxy",
+      "Add scheduled alert management"
+    ]
+  }
+];
+
+let currentProject = null;
+let apiKey = localStorage.getItem('claude_api_key') || '';
+
+function init() {
+  renderSidebar(PROJECTS);
+  showHome();
+  updateKeyStatus();
+}
+
+function renderSidebar(projects) {
+  const webEl = document.getElementById('sidebar-web');
+  const toolsEl = document.getElementById('sidebar-tools');
+  webEl.innerHTML = '';
+  toolsEl.innerHTML = '';
+  projects.forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'proj-item' + (currentProject?.id === p.id ? ' active' : '');
+    el.id = 'sidebar-' + p.id;
+    el.onclick = () => showProject(p);
+    const statusBadge = p.github ? '' : '<span style="width:6px;height:6px;border-radius:50%;background:var(--amber);display:inline-block;margin-left:4px" title="No GitHub"></span>';
+    el.innerHTML = `<span class="proj-icon" style="background:var(--surface2)">${p.icon}</span>
+      <span class="proj-item-name">${p.name}${statusBadge}</span>
+      <span class="proj-item-size">${p.size}</span>`;
+    (p.category === 'web' ? webEl : toolsEl).appendChild(el);
+  });
+}
+
+function filterProjects(q) {
+  const filtered = PROJECTS.filter(p => p.name.toLowerCase().includes(q.toLowerCase()) || p.tech.some(t => t.toLowerCase().includes(q.toLowerCase())));
+  renderSidebar(filtered);
+}
+
+function showHome() {
+  currentProject = null;
+  document.getElementById('topbar-title').textContent = 'Overview — FYP UM Projects';
+  document.getElementById('analyse-btn').style.display = 'none';
+  document.getElementById('content').innerHTML = `
+    <div class="home-stats">
+      <div class="stat-card"><div class="stat-val">14</div><div class="stat-lbl">Total projects</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--amber)">5</div><div class="stat-lbl">Need GitHub</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--red)">3.7 GB</div><div class="stat-lbl">Reclaimable storage</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--green)">9</div><div class="stat-lbl">On GitHub</div></div>
+    </div>
+    <div style="margin-bottom:16px">
+      <div style="font-size:16px;font-weight:600;margin-bottom:4px">All Projects</div>
+      <div style="font-size:13px;color:var(--text2)">Click any card to view details and run AI analysis</div>
+    </div>
+    <div class="home-grid">
+      ${PROJECTS.map(p => `
+        <div class="home-card" onclick="showProject(PROJECTS.find(x=>x.id==='${p.id}'))">
+          <div class="home-card-icon">${p.icon}</div>
+          <div class="home-card-name">${p.name}</div>
+          <div class="home-card-meta">${p.tech.slice(0,2).join(' · ')} · ${p.size}</div>
+          <div style="margin-top:8px">${p.github ? '<span class="badge badge-green">On GitHub</span>' : '<span class="badge badge-amber">No GitHub</span>'}</div>
+        </div>
+      `).join('')}
+    </div>`;
+}
+
+function showProject(p) {
+  currentProject = p;
+  document.getElementById('topbar-title').textContent = p.name;
+  document.getElementById('analyse-btn').style.display = 'inline-flex';
+  document.querySelectorAll('.proj-item').forEach(el => el.classList.remove('active'));
+  const sidebarItem = document.getElementById('sidebar-' + p.id);
+  if (sidebarItem) sidebarItem.classList.add('active');
+
+  const githubLink = p.github ? `<a href="${p.github}" target="_blank" style="color:var(--accent);text-decoration:none;font-size:13px">↗ ${p.github.replace('https://github.com/','')}</a>` : '<span style="color:var(--text3);font-size:13px">Not on GitHub yet</span>';
+
+  document.getElementById('content').innerHTML = `
+    <div class="proj-header">
+      <div class="proj-icon-lg" style="background:var(--surface2);font-size:26px">${p.icon}</div>
+      <div>
+        <div class="proj-title">${p.name}</div>
+        <div class="proj-desc">${p.description}</div>
+        <div class="badge-row">
+          ${p.tech.map(t => `<span class="badge badge-accent">${t}</span>`).join('')}
+          ${p.github ? '<span class="badge badge-green">On GitHub</span>' : '<span class="badge badge-amber">Needs GitHub</span>'}
+          <span class="badge badge-neutral">${p.size}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-grid">
+      <div class="stat-card"><div class="stat-val" style="font-size:14px;font-family:monospace">${p.runCmd.split('\n')[0]}</div><div class="stat-lbl">How to run</div></div>
+      <div class="stat-card"><div class="stat-val" style="font-size:13px">${githubLink}</div><div class="stat-lbl">GitHub</div></div>
+      <div class="stat-card"><div class="stat-val" style="font-size:13px">${p.size}</div><div class="stat-lbl">Folder size</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 Overview</div>
+      <div class="card-body">${p.overview}</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚠️ Known Limitations</div>
+      <div class="card-body"><ul>${p.limitations.map(l=>`<li>${l}</li>`).join('')}</ul></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🚀 What's Next</div>
+      <div class="card-body"><ul>${p.next.map(n=>`<li>${n}</li>`).join('')}</ul></div>
+    </div>
+
+    <div class="ai-box" id="ai-section">
+      <div class="ai-header">
+        <div class="ai-label">✨ AI Analysis</div>
+        <button class="btn btn-accent" onclick="analyseProject()">Analyse this project</button>
+      </div>
+      <div class="ai-content"><p class="ai-placeholder">Click "Analyse this project" to get a deeper AI analysis powered by Claude. Make sure your API key is set.</p></div>
+    </div>`;
+}
+
+async function analyseProject() {
+  if (!currentProject) return;
+  if (!apiKey) { showApiKeyModal(); return; }
+
+  const aiSection = document.getElementById('ai-section');
+  aiSection.querySelector('.ai-header').innerHTML = `<div class="ai-label">✨ AI Analysis</div><div class="spinner"></div>`;
+  aiSection.querySelector('.ai-content').innerHTML = '<p class="ai-placeholder">Analysing with Claude...</p>';
+
+  const prompt = `You are reviewing a software project called "${currentProject.name}".
+
+Tech stack: ${currentProject.tech.join(', ')}
+Description: ${currentProject.description}
+Overview: ${currentProject.overview}
+Known limitations so far: ${currentProject.limitations.join('; ')}
+What's planned: ${currentProject.next.join('; ')}
+
+Please provide:
+1. A concise technical overview (2-3 sentences) from a senior developer perspective
+2. Top 3 real technical limitations or risks to be aware of
+3. Top 3 concrete next steps, prioritised by impact
+4. One "quick win" — something that takes under an hour that would meaningfully improve the project
+
+Format your response in markdown with headers: ## Overview, ## Limitations, ## Next Steps, ## Quick Win`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 800,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error?.message || 'API error');
+    }
+
+    const data = await res.json();
+    const text = data.content[0].text;
+    const html = text
+      .replace(/## (.+)/g, '<h4>$1</h4>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/^- (.+)/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>\n?)+/g, m => `<ul>${m}</ul>`)
+      .replace(/\n\n/g, '<br><br>')
+      .replace(/\n/g, ' ');
+
+    aiSection.querySelector('.ai-header').innerHTML = `<div class="ai-label">✨ AI Analysis — Claude</div><button class="btn" onclick="analyseProject()" style="font-size:12px">Refresh</button>`;
+    aiSection.querySelector('.ai-content').innerHTML = html;
+  } catch(e) {
+    aiSection.querySelector('.ai-header').innerHTML = `<div class="ai-label">✨ AI Analysis</div><button class="btn btn-accent" onclick="analyseProject()">Retry</button>`;
+    aiSection.querySelector('.ai-content').innerHTML = `<p style="color:var(--red)">Error: ${e.message}. Check your API key and try again.</p>`;
+  }
+}
+
+function showApiKeyModal() {
+  document.getElementById('key-input').value = apiKey;
+  document.getElementById('key-modal').classList.remove('hidden');
+}
+function closeModal() { document.getElementById('key-modal').classList.add('hidden'); }
+function saveKey() {
+  apiKey = document.getElementById('key-input').value.trim();
+  localStorage.setItem('claude_api_key', apiKey);
+  updateKeyStatus();
+  closeModal();
+}
+function updateKeyStatus() {
+  document.getElementById('key-status').textContent = apiKey ? '✓ API Key Set' : 'Set API Key';
+}
+
+function toggleTheme() {
+  const body = document.body;
+  const isDark = body.getAttribute('data-theme') === 'dark';
+  body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('theme-icon').textContent = isDark ? '🌙' : '☀️';
+  document.getElementById('theme-label').textContent = isDark ? 'Dark mode' : 'Light mode';
+}
+
+document.getElementById('key-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+init();
+</script>
+</body>
+</html>
