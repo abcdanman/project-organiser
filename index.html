@@ -3,630 +3,632 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Project Organiser — FYP UM</title>
+<title>FYP Project Hub</title>
 <style>
-  :root {
-    --bg: #f5f5f0;
-    --surface: #ffffff;
-    --surface2: #f0efe9;
-    --border: rgba(0,0,0,0.1);
-    --text: #1a1a18;
-    --text2: #6b6b65;
-    --text3: #9b9b94;
-    --accent: #5340d1;
-    --accent-bg: #eeedfe;
-    --accent-text: #3c3489;
-    --green: #0f6e56;
-    --green-bg: #e1f5ee;
-    --amber: #854f0b;
-    --amber-bg: #faeeda;
-    --red: #a32d2d;
-    --red-bg: #fcebeb;
-    --radius: 12px;
-    --radius-sm: 8px;
-  }
-  [data-theme="dark"] {
-    --bg: #1a1a18;
-    --surface: #252523;
-    --surface2: #2e2e2b;
-    --border: rgba(255,255,255,0.08);
-    --text: #f0efe9;
-    --text2: #a0a099;
-    --text3: #6b6b65;
-    --accent: #7f77dd;
-    --accent-bg: #26215c;
-    --accent-text: #afa9ec;
-    --green: #5dcaa5;
-    --green-bg: #04342c;
-    --amber: #ef9f27;
-    --amber-bg: #412402;
-    --red: #f09595;
-    --red-bg: #501313;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; font-size: 14px; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #F4F2FF;
+  --surface: #ffffff;
+  --surface2: #f8f7ff;
+  --border: rgba(109,40,217,0.1);
+  --text: #18181b;
+  --text2: #71717a;
+  --text3: #a1a1aa;
+  --primary: #6d28d9;
+  --primary-light: #ede9fe;
+  --green: #059669;
+  --green-glow: rgba(5,150,105,0.25);
+  --red: #dc2626;
+  --red-glow: rgba(220,38,38,0.25);
+  --amber: #d97706;
+  --radius: 18px;
+  --radius-sm: 10px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 8px 24px rgba(109,40,217,0.06);
+  --shadow-hover: 0 2px 8px rgba(0,0,0,0.08), 0 16px 40px rgba(109,40,217,0.1);
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-  /* Sidebar */
-  #sidebar { width: 260px; min-height: 100vh; background: var(--surface); border-right: 0.5px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
-  .sidebar-header { padding: 20px 16px 12px; border-bottom: 0.5px solid var(--border); }
-  .sidebar-title { font-size: 15px; font-weight: 600; color: var(--text); }
-  .sidebar-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
-  .sidebar-search { margin: 10px 12px; position: relative; }
-  .sidebar-search input { width: 100%; background: var(--surface2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 7px 10px 7px 30px; font-size: 13px; color: var(--text); outline: none; }
-  .sidebar-search input::placeholder { color: var(--text3); }
-  .sidebar-search svg { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--text3); }
-  .sidebar-section { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; padding: 12px 16px 4px; }
-  .proj-item { display: flex; align-items: center; gap: 9px; padding: 8px 16px; cursor: pointer; border-radius: 0; transition: background 0.1s; }
-  .proj-item:hover { background: var(--surface2); }
-  .proj-item.active { background: var(--accent-bg); color: var(--accent-text); }
-  .proj-item.active .proj-item-name { color: var(--accent); }
-  .proj-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
-  .proj-item-name { font-size: 13px; font-weight: 500; color: var(--text); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .proj-item-size { font-size: 11px; color: var(--text3); }
-  .sidebar-footer { margin-top: auto; padding: 12px 16px; border-top: 0.5px solid var(--border); }
-  .theme-toggle { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); cursor: pointer; background: none; border: none; color: var(--text2); }
+/* HEADER */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  height: 60px;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: linear-gradient(135deg, #6d28d9, #4f46e5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+}
+.logo-text { font-size: 15px; font-weight: 700; color: var(--text); }
+.header-stats { display: flex; gap: 20px; margin-left: 24px; }
+.stat-pill {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--text2);
+}
+.stat-pill .dot { width: 7px; height: 7px; border-radius: 50%; }
+.dot-green { background: #10b981; }
+.dot-gray { background: var(--text3); }
+.header-spacer { flex: 1; }
+.header-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--surface2);
+  font-size: 13px; font-weight: 500; color: var(--text2);
+  cursor: pointer; transition: all 0.15s; text-decoration: none;
+}
+.header-btn:hover { background: var(--primary-light); color: var(--primary); border-color: rgba(109,40,217,0.3); }
+.btn-stop-server {
+  background: rgba(220,38,38,0.08); color: var(--red);
+  border-color: rgba(220,38,38,0.2);
+}
+.btn-stop-server:hover { background: rgba(220,38,38,0.15); border-color: rgba(220,38,38,0.4); }
 
-  /* Main */
-  #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-  .topbar { display: flex; align-items: center; gap: 12px; padding: 14px 24px; border-bottom: 0.5px solid var(--border); background: var(--surface); }
-  .topbar-title { font-size: 15px; font-weight: 600; flex: 1; }
-  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--radius-sm); border: 0.5px solid var(--border); background: var(--surface); color: var(--text); font-size: 13px; cursor: pointer; transition: background 0.1s; white-space: nowrap; }
-  .btn:hover { background: var(--surface2); }
-  .btn-accent { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .btn-accent:hover { opacity: 0.9; background: var(--accent); }
-  .content { flex: 1; overflow-y: auto; padding: 24px; }
+/* FILTER BAR */
+.filterbar {
+  padding: 16px 28px 0;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.filter-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 99px;
+  border: 1px solid transparent;
+  background: var(--surface); color: var(--text2);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  transition: all 0.15s; white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.filter-btn:hover { color: var(--primary); border-color: rgba(109,40,217,0.25); }
+.filter-btn.active {
+  background: var(--primary); color: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(109,40,217,0.35);
+}
+.filter-count {
+  background: rgba(255,255,255,0.25); color: inherit;
+  border-radius: 99px; padding: 1px 7px; font-size: 11px; font-weight: 600;
+}
+.filter-btn:not(.active) .filter-count { background: var(--surface2); color: var(--text3); }
+.search-wrap { margin-left: auto; position: relative; }
+.search-wrap input {
+  padding: 6px 12px 6px 32px; border-radius: 99px;
+  border: 1px solid var(--border); background: var(--surface);
+  font-size: 13px; color: var(--text); outline: none;
+  width: 180px; transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.search-wrap input:focus { width: 220px; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(109,40,217,0.12); }
+.search-wrap input::placeholder { color: var(--text3); }
+.search-ico { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text3); pointer-events: none; }
 
-  /* Project detail */
-  .proj-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
-  .proj-icon-lg { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
-  .proj-title { font-size: 22px; font-weight: 600; }
-  .proj-desc { font-size: 13px; color: var(--text2); margin-top: 4px; }
-  .badge-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-  .badge { font-size: 11px; padding: 3px 10px; border-radius: 99px; font-weight: 500; }
-  .badge-neutral { background: var(--surface2); color: var(--text2); border: 0.5px solid var(--border); }
-  .badge-green { background: var(--green-bg); color: var(--green); }
-  .badge-amber { background: var(--amber-bg); color: var(--amber); }
-  .badge-red { background: var(--red-bg); color: var(--red); }
-  .badge-accent { background: var(--accent-bg); color: var(--accent-text); }
+/* GRID */
+.grid-wrap { padding: 20px 28px 40px; }
+.section-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.07em; color: var(--text3); margin: 16px 0 10px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
 
-  .section-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
-  .stat-card { background: var(--surface2); border-radius: var(--radius-sm); padding: 14px; }
-  .stat-val { font-size: 20px; font-weight: 600; }
-  .stat-lbl { font-size: 12px; color: var(--text2); margin-top: 2px; }
+/* CARD */
+.card {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  display: flex; flex-direction: column;
+  overflow: hidden; transition: box-shadow 0.2s, transform 0.2s;
+  animation: fadeUp 0.3s ease both;
+}
+.card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+.card.is-running { border-color: rgba(5,150,105,0.3); }
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
 
-  .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 14px; }
-  .card-title { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-  .card-body { font-size: 14px; color: var(--text); line-height: 1.7; }
-  .card-body ul { padding-left: 18px; }
-  .card-body li { margin-bottom: 6px; }
-  .card-body li::marker { color: var(--accent); }
+.card-top { padding: 18px 18px 14px; display: flex; align-items: flex-start; gap: 13px; }
+.card-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.card-info { flex: 1; min-width: 0; }
+.card-name { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-desc { font-size: 12px; color: var(--text2); margin-top: 3px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-  /* AI analysis section */
-  .ai-box { border: 0.5px solid var(--accent); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 14px; background: var(--accent-bg); }
-  .ai-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .ai-label { font-size: 13px; font-weight: 600; color: var(--accent-text); display: flex; align-items: center; gap: 8px; }
-  .ai-content { font-size: 14px; color: var(--text); line-height: 1.7; }
-  .ai-content h4 { font-size: 13px; font-weight: 600; margin: 14px 0 6px; color: var(--accent-text); }
-  .ai-content ul { padding-left: 18px; }
-  .ai-content li { margin-bottom: 5px; }
-  .ai-placeholder { color: var(--text3); font-style: italic; }
+.card-tech { padding: 0 18px 12px; display: flex; flex-wrap: wrap; gap: 5px; }
+.tech-chip {
+  font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 99px;
+  background: var(--surface2); color: var(--text2);
+  border: 1px solid var(--border);
+}
 
-  /* API key modal */
-  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: flex; align-items: center; justify-content: center; }
-  .modal { background: var(--surface); border-radius: var(--radius); padding: 28px; width: 420px; max-width: 90vw; border: 0.5px solid var(--border); }
-  .modal h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-  .modal p { font-size: 13px; color: var(--text2); margin-bottom: 16px; line-height: 1.6; }
-  .modal input { width: 100%; background: var(--surface2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 13px; color: var(--text); font-family: monospace; outline: none; margin-bottom: 12px; }
-  .modal-footer { display: flex; gap: 8px; justify-content: flex-end; }
+.card-status {
+  margin: 0 18px 14px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 500;
+}
+.status-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  background: var(--text3); transition: background 0.3s;
+}
+.is-running .status-dot {
+  background: #10b981;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.2);
+  animation: pulse-green 2s infinite;
+}
+@keyframes pulse-green {
+  0%,100% { box-shadow: 0 0 0 3px rgba(16,185,129,0.2); }
+  50% { box-shadow: 0 0 0 6px rgba(16,185,129,0.05); }
+}
+.status-text { color: var(--text2); }
+.is-running .status-text { color: var(--green); }
+.status-open {
+  margin-left: auto; font-size: 12px; font-weight: 500;
+  color: var(--green); text-decoration: none;
+  padding: 2px 8px; border-radius: 99px;
+  background: rgba(5,150,105,0.1); transition: background 0.15s;
+}
+.status-open:hover { background: rgba(5,150,105,0.18); }
 
-  /* Loading spinner */
-  .spinner { width: 18px; height: 18px; border: 2px solid var(--accent-bg); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+.card-action { padding: 0 14px 14px; }
+.btn-run {
+  width: 100%; padding: 11px; border-radius: 11px; border: none;
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s; letter-spacing: 0.02em;
+  box-shadow: 0 2px 8px rgba(5,150,105,0.3);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-run:hover { filter: brightness(1.07); box-shadow: 0 4px 14px rgba(5,150,105,0.4); transform: translateY(-1px); }
+.btn-run:active { transform: scale(0.98); }
+.btn-stop {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  box-shadow: 0 2px 8px rgba(220,38,38,0.3);
+}
+.btn-stop:hover { box-shadow: 0 4px 14px rgba(220,38,38,0.4); }
+.btn-open {
+  background: linear-gradient(135deg, #6d28d9, #7c3aed);
+  box-shadow: 0 2px 8px rgba(109,40,217,0.3);
+}
+.btn-open:hover { box-shadow: 0 4px 14px rgba(109,40,217,0.4); }
+.btn-info {
+  background: var(--surface2); color: var(--text2);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+.btn-info:hover { background: var(--primary-light); color: var(--primary); border-color: rgba(109,40,217,0.3); box-shadow: none; transform: none; }
+.btn-loading {
+  background: #d1fae5; color: #059669;
+  box-shadow: none; cursor: wait;
+}
+.btn-loading:hover { filter: none; box-shadow: none; transform: none; }
 
-  /* Home screen */
-  .home-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-  .home-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 16px; cursor: pointer; transition: border-color 0.15s, transform 0.1s; }
-  .home-card:hover { border-color: var(--accent); transform: translateY(-1px); }
-  .home-card-icon { font-size: 24px; margin-bottom: 10px; }
-  .home-card-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-  .home-card-meta { font-size: 12px; color: var(--text3); }
-  .home-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+.card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 18px 14px; border-top: 1px solid var(--border);
+}
+.footer-size { font-size: 11px; color: var(--text3); }
+.footer-github {
+  font-size: 11px; color: var(--text3); text-decoration: none;
+  display: flex; align-items: center; gap: 4px; transition: color 0.15s;
+}
+.footer-github:hover { color: var(--primary); }
+.footer-note { font-size: 11px; color: var(--amber); }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+/* SPINNER */
+.spinner {
+  width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  .hidden { display: none; }
+/* TOAST */
+#toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--text); color: #fff;
+  padding: 10px 18px; border-radius: 99px; font-size: 13px; font-weight: 500;
+  z-index: 200; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  white-space: nowrap; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+#toast.show { transform: translateX(-50%) translateY(0); }
+#toast.error { background: var(--red); }
+#toast.success { background: var(--green); }
+
+/* AI PANEL */
+#ai-panel {
+  position: fixed; right: 0; top: 0; bottom: 0; width: 380px;
+  background: var(--surface); border-left: 1px solid var(--border);
+  z-index: 100; transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column;
+  box-shadow: -8px 0 40px rgba(0,0,0,0.1);
+}
+#ai-panel.open { transform: translateX(0); }
+.ai-panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px; border-bottom: 1px solid var(--border);
+}
+.ai-panel-title { font-size: 15px; font-weight: 600; }
+.ai-panel-close {
+  width: 30px; height: 30px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--surface2);
+  cursor: pointer; font-size: 16px; color: var(--text2);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.ai-panel-close:hover { background: var(--primary-light); color: var(--primary); }
+.ai-panel-body { flex: 1; overflow-y: auto; padding: 20px; }
+.ai-key-row { display: flex; gap: 8px; margin-bottom: 16px; }
+.ai-key-row input {
+  flex: 1; padding: 8px 12px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--surface2);
+  font-size: 13px; font-family: monospace; outline: none; color: var(--text);
+}
+.ai-key-row input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(109,40,217,0.12); }
+.ai-save-btn {
+  padding: 8px 14px; border-radius: var(--radius-sm);
+  background: var(--primary); color: #fff;
+  border: none; font-size: 13px; font-weight: 500; cursor: pointer;
+}
+.ai-result { font-size: 13px; line-height: 1.8; color: var(--text); }
+.ai-result h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); margin: 16px 0 6px; }
+.ai-result ul { padding-left: 16px; }
+.ai-result li { margin-bottom: 5px; }
+.ai-placeholder { color: var(--text3); font-size: 13px; text-align: center; margin-top: 40px; line-height: 1.7; }
+.ai-analyse-btn {
+  width: 100%; padding: 10px; border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #6d28d9, #7c3aed);
+  color: #fff; border: none; font-size: 13px; font-weight: 600;
+  cursor: pointer; margin-bottom: 16px; transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(109,40,217,0.3);
+}
+.ai-analyse-btn:hover { filter: brightness(1.08); }
+
+/* EMPTY STATE */
+.empty { text-align: center; padding: 60px 20px; color: var(--text3); }
+.empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+/* OVERLAY when panel open */
+#overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0); z-index: 90;
+  pointer-events: none; transition: background 0.3s;
+}
+#overlay.active { background: rgba(0,0,0,0.2); pointer-events: all; }
 </style>
 </head>
-<body data-theme="light">
+<body>
 
-<!-- Sidebar -->
-<div id="sidebar">
-  <div class="sidebar-header">
-    <div class="sidebar-title">📁 Project Organiser</div>
-    <div class="sidebar-sub">FYP UM — 14 projects</div>
+<header>
+  <div class="logo">
+    <div class="logo-icon">📁</div>
+    <span class="logo-text">FYP Project Hub</span>
   </div>
-  <div class="sidebar-search">
-    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" id="search" placeholder="Search projects..." oninput="filterProjects(this.value)">
-  </div>
-  <div class="sidebar-section">Web & Apps</div>
-  <div id="sidebar-web"></div>
-  <div class="sidebar-section">Tools & Scripts</div>
-  <div id="sidebar-tools"></div>
-  <div class="sidebar-footer">
-    <button class="theme-toggle" onclick="toggleTheme()">
-      <span id="theme-icon">🌙</span> <span id="theme-label">Dark mode</span>
-    </button>
-  </div>
-</div>
-
-<!-- Main content -->
-<div id="main">
-  <div class="topbar">
-    <div class="topbar-title" id="topbar-title">Overview</div>
-    <button class="btn" onclick="showApiKeyModal()">🔑 <span id="key-status">Set API Key</span></button>
-    <button class="btn btn-accent" id="analyse-btn" onclick="analyseProject()" style="display:none">✨ Analyse with AI</button>
-  </div>
-  <div class="content" id="content">
-    <!-- Home view injected here -->
-  </div>
-</div>
-
-<!-- API Key Modal -->
-<div class="overlay hidden" id="key-modal">
-  <div class="modal">
-    <h3>🔑 Set Claude API Key</h3>
-    <p>Enter your Anthropic API key to enable AI analysis. The key is stored only in your browser and never sent anywhere except Anthropic's API.</p>
-    <input type="password" id="key-input" placeholder="sk-ant-..." />
-    <div class="modal-footer">
-      <button class="btn" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-accent" onclick="saveKey()">Save & Enable AI</button>
+  <div class="header-stats">
+    <div class="stat-pill">
+      <div class="dot dot-green" id="running-dot"></div>
+      <span id="running-count">0 running</span>
     </div>
+    <div class="stat-pill">
+      <div class="dot dot-gray"></div>
+      <span id="total-count">— projects</span>
+    </div>
+  </div>
+  <div class="header-spacer"></div>
+  <button class="header-btn" onclick="openAiPanel()">✨ AI Analysis</button>
+  <button class="header-btn btn-stop-server" onclick="stopServer()">⏻ Stop Server</button>
+</header>
+
+<div class="filterbar">
+  <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">All <span class="filter-count" id="count-all">—</span></button>
+  <button class="filter-btn" data-filter="running" onclick="setFilter('running')">● Running <span class="filter-count" id="count-running">0</span></button>
+  <button class="filter-btn" data-filter="web" onclick="setFilter('web')">Web <span class="filter-count" id="count-web">—</span></button>
+  <button class="filter-btn" data-filter="mobile" onclick="setFilter('mobile')">Mobile <span class="filter-count" id="count-mobile">—</span></button>
+  <button class="filter-btn" data-filter="tools" onclick="setFilter('tools')">Tools <span class="filter-count" id="count-tools">—</span></button>
+  <div class="search-wrap">
+    <svg class="search-ico" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" placeholder="Search projects…" id="search" oninput="renderGrid()">
+  </div>
+</div>
+
+<div class="grid-wrap" id="grid-wrap"></div>
+
+<div id="toast"></div>
+<div id="overlay" onclick="closeAiPanel()"></div>
+
+<div id="ai-panel">
+  <div class="ai-panel-header">
+    <div class="ai-panel-title" id="ai-panel-title">✨ AI Analysis</div>
+    <button class="ai-panel-close" onclick="closeAiPanel()">✕</button>
+  </div>
+  <div class="ai-panel-body">
+    <div class="ai-key-row">
+      <input type="password" id="ai-key" placeholder="sk-ant-… Claude API key" value="">
+      <button class="ai-save-btn" onclick="saveKey()">Save</button>
+    </div>
+    <button class="ai-analyse-btn" id="ai-btn" onclick="analyseProject()">Analyse selected project</button>
+    <div id="ai-result"><p class="ai-placeholder">Select a project card then click Analyse to get AI insights — overview, limitations, and what to build next.</p></div>
   </div>
 </div>
 
 <script>
-const PROJECTS = [
-  {
-    id: "antigravity-yapping",
-    name: "Antigravity Yapping",
-    icon: "💬",
-    category: "web",
-    tech: ["React", "Node.js", "Vite", "Tailwind"],
-    size: "160 MB",
-    status: "active",
-    github: "https://github.com/abcdanman/Outbound-UM",
-    description: "Full-stack social/chat web application with a React frontend and Express/Node.js backend. Uses a database via Knex with migrations and seeding.",
-    runCmd: "cd frontend && npm run dev   (backend: cd backend && node index.js)",
-    overview: "A web app built with React (Vite) on the front end and Express.js on the backend. Has middleware, database migrations, file uploads support, and a RESTful API structure.",
-    limitations: [
-      "Runs as two separate processes (frontend + backend must be started individually)",
-      "No Docker or one-command startup",
-      "Upload folder is tracked in git — large files could bloat the repo"
-    ],
-    next: [
-      "Add a root-level start script to launch both services together",
-      "Add .env.example so collaborators know what variables to set",
-      "Add authentication if not already present"
-    ]
-  },
-  {
-    id: "testing-yapping",
-    name: "Testing Yapping (SOP)",
-    icon: "🧪",
-    category: "web",
-    tech: ["React", "Express", "Supabase", "Tailwind"],
-    size: "76 MB",
-    status: "dev",
-    github: null,
-    description: "Standard Operating Procedure web app (sop-frontend / sop-backend). Uses Supabase as database. Appears to be an active development version separate from Antigravity Yapping.",
-    runCmd: "cd frontend && npm run dev   (backend: cd backend && node server.js)",
-    overview: "Full-stack SOP management tool. Frontend is React + Vite + Tailwind. Backend is Express with JWT auth, file uploads via Multer, and Supabase as the database layer.",
-    limitations: [
-      "No git repo — not version controlled yet",
-      "Supabase schema SQL file present but setup instructions missing",
-      ".env has real credentials — needs .env.example"
-    ],
-    next: [
-      "Initialise git and push to GitHub",
-      "Add README with setup instructions",
-      "Add Supabase migration guide to the README"
-    ]
-  },
-  {
-    id: "jomcuti-app",
-    name: "JomCuti App",
-    icon: "🏖️",
-    category: "web",
-    tech: ["Next.js 15", "React", "Tailwind", "TypeScript"],
-    size: "693 MB",
-    status: "active",
-    github: null,
-    description: "Leave/holiday management web app built with Next.js 15. Has web-push notifications support. Large due to node_modules.",
-    runCmd: "npm run dev",
-    overview: "Next.js 15 application for managing leave/cuti (holiday) requests. Uses Tailwind v4, TypeScript, Cheerio for scraping, and web-push for notifications.",
-    limitations: [
-      "Has git but no GitHub remote set — code could be lost",
-      "node_modules is 690+ MB and bloats the folder",
-      "No README or setup documentation"
-    ],
-    next: [
-      "Add GitHub remote and push",
-      "Add a proper README with setup instructions",
-      "Add .env.example for required environment variables"
-    ]
-  },
-  {
-    id: "um-waze",
-    name: "UM Waze",
-    icon: "🗺️",
-    category: "web",
-    tech: ["React Native", "Expo", "TypeScript"],
-    size: "362 MB",
-    status: "active",
-    github: "https://github.com/fidelismee/um-waze",
-    description: "Campus navigation mobile app built with React Native and Expo. Navigation/routing app for University of Malaya campus.",
-    runCmd: "npx expo start",
-    overview: "React Native + Expo app for UM campus navigation. TypeScript-based, has a metro bundler config and proper project structure with src/ folder.",
-    limitations: [
-      "On a collaborator's GitHub account (fidelismee), not yours",
-      "No offline map support noted",
-      "node_modules bloats disk usage"
-    ],
-    next: [
-      "Fork to your own GitHub account (abcdanman)",
-      "Add campus map data and POI markers",
-      "Add offline capability for areas with poor signal"
-    ]
-  },
-  {
-    id: "snapchallenge",
-    name: "Snap Challenge",
-    icon: "📸",
-    category: "web",
-    tech: ["Flutter", "Firebase", "Dart"],
-    size: "1.2 GB",
-    status: "active",
-    github: "https://github.com/zhanas12/snapchallenge",
-    description: "Daily photo challenge community mobile app built with Flutter. Firebase backend for auth, storage, and Firestore. Full-featured with notifications and geolocation.",
-    runCmd: "flutter run",
-    overview: "Flutter mobile app for daily photo challenges. Uses Firebase Auth, Firestore, Storage, and push notifications. Has Provider state management and a well-structured lib/ folder.",
-    limitations: [
-      "On collaborator's GitHub (zhanas12), not your account",
-      "snapchallenge-1 is an exact duplicate taking 2.5 GB — safe to delete",
-      "No CI/CD pipeline"
-    ],
-    next: [
-      "Delete snapchallenge-1 to recover 2.5 GB",
-      "Fork to your own GitHub account",
-      "Add app flavors for dev/prod environments"
-    ]
-  },
-  {
-    id: "um-eagle-eye",
-    name: "UM Eagle Eye (EBSI)",
-    icon: "👁️",
-    category: "web",
-    tech: ["Cloudflare Workers", "Agents SDK", "EBSI"],
-    size: "868 MB",
-    status: "forked",
-    github: "https://github.com/ndriannazriel/UMEagleEye-FORKED-FOR-EBSI",
-    description: "Forked project for EBSI (European Blockchain Services Infrastructure) use case. Uses Cloudflare Workers and agent framework. Related to the EBSI Use Case diagram in the folder root.",
-    runCmd: "wrangler dev (Cloudflare Workers)",
-    overview: "A Cloudflare Workers / Agents SDK project adapted for EBSI blockchain credential verification. Has agent/, EBSI/ subfolders and multiple wrangler log files.",
-    limitations: [
-      "Forked from someone else's repo — your changes not tracked separately",
-      "Multiple wrangler log files suggest failed deploys",
-      "EBSI integration may require specific EU blockchain network access"
-    ],
-    next: [
-      "Create your own fork under abcdanman",
-      "Clean up wrangler.log files",
-      "Document the EBSI integration steps in README"
-    ]
-  },
-  {
-    id: "game",
-    name: "Game (Meme Master)",
-    icon: "🎮",
-    category: "web",
-    tech: ["HTML", "CSS", "JavaScript"],
-    size: "0.2 MB",
-    status: "active",
-    github: "https://github.com/abcdanman/Meme-Master",
-    description: "Browser-based game with multiplayer support. Multiple HTML pages: game, multiplayer, profile, settings. Pure HTML/JS, no build step needed.",
-    runCmd: "Open index.html in browser",
-    overview: "Static HTML/CSS/JS browser game. Includes multiplayer.html suggesting peer-to-peer or server-based multiplayer. Very lightweight — no dependencies.",
-    limitations: [
-      "Static files — multiplayer may require a signalling server",
-      "No bundler or minification",
-      "No mobile responsiveness may be limited"
-    ],
-    next: [
-      "Add a simple WebSocket server for true multiplayer",
-      "Deploy to GitHub Pages for free hosting",
-      "Add touch controls for mobile"
-    ]
-  },
-  {
-    id: "dr-trader",
-    name: "Dr Trader",
-    icon: "📈",
-    category: "tools",
-    tech: ["Python", "Flask/FastAPI"],
-    size: "0.2 MB",
-    status: "active",
-    github: "https://github.com/abcdanman/Dr-Trader",
-    description: "Trading alert/monitoring tool with a web app interface. Python backend with check_alerts.py script and a Flask/FastAPI app/ folder.",
-    runCmd: "python check_alerts.py  or  run.bat",
-    overview: "Python-based trading alert system. Has a main app/ directory suggesting a web UI, a separate check_alerts.py entry point, and .env for API keys (broker/exchange credentials).",
-    limitations: [
-      "Likely needs API keys for broker or data provider",
-      "No scheduler — alerts must be manually triggered unless using cron/task scheduler",
-      "No GUI — terminal-based"
-    ],
-    next: [
-      "Add Windows Task Scheduler integration to run automatically",
-      "Add a simple Tkinter or web GUI for non-technical users",
-      "Add Telegram/email notification support"
-    ]
-  },
-  {
-    id: "game-optimizer",
-    name: "Game Optimizer",
-    icon: "⚡",
-    category: "tools",
-    tech: ["Python", "Tkinter"],
-    size: "0.2 MB",
-    status: "active",
-    github: null,
-    description: "Windows game performance optimiser with a Python GUI (Tkinter). Has a custom icon and a launch.bat file. Optimises system settings before gaming.",
-    runCmd: "launch.bat  or  python game_optimizer.py",
-    overview: "Python desktop tool that optimises Windows settings for gaming (likely: process priority, power plan, RAM cleaner). Has Tkinter GUI and a custom icon.",
-    limitations: [
-      "No git repo or GitHub backup",
-      "Likely needs admin privileges to modify system settings",
-      "Windows-only"
-    ],
-    next: [
-      "Initialise git and push to GitHub",
-      "Add a manifest.xml for UAC elevation request",
-      "Package as a standalone .exe with PyInstaller"
-    ]
-  },
-  {
-    id: "gmail-bot",
-    name: "Gmail Bot",
-    icon: "📧",
-    category: "tools",
-    tech: ["Python", "Gmail API", "MCP"],
-    size: "<1 MB",
-    status: "active",
-    github: "https://github.com/abcdanman/Gmail-Bot",
-    description: "Gmail automation bot using the Gmail API and MCP (Model Context Protocol). Cleans Gmail inbox automatically.",
-    runCmd: "python gmail_cleaner_mcp.py",
-    overview: "Python MCP server that integrates with Gmail API for automated email management. Has credentials.json for OAuth2 and MCP protocol support for Claude integration.",
-    limitations: [
-      "credentials.json should NOT be committed to GitHub",
-      "Requires Gmail OAuth2 flow on first run",
-      "MCP server requires Claude Desktop to connect"
-    ],
-    next: [
-      "Add credentials.json to .gitignore if not already",
-      "Add README explaining MCP setup",
-      "Add more cleaning rules (unsubscribe, archive by label)"
-    ]
-  },
-  {
-    id: "otonoco-compliance",
-    name: "Otonoco Compliance",
-    icon: "✅",
-    category: "tools",
-    tech: ["Python", "FastAPI", "AI"],
-    size: "<1 MB",
-    status: "active",
-    github: null,
-    description: "AI-powered compliance document agent. FastAPI backend with file ingestion, extraction, and a static frontend. Has start.bat for easy launch.",
-    runCmd: "start.bat  or  python main.py",
-    overview: "Python FastAPI compliance checking agent. Uses AI to ingest documents (ingester.py), extract compliance info (extractor.py), and store in a local database (database.py). Has a static web UI.",
-    limitations: [
-      "No git repo — code not version controlled",
-      "Relies on .env for AI API keys — setup not documented",
-      "SQLite database file likely in project folder — not suitable for production"
-    ],
-    next: [
-      "Initialise git and push to GitHub",
-      "Add Docker support for easy deployment",
-      "Add a proper README with setup instructions"
-    ]
-  },
-  {
-    id: "storage-cleaner",
-    name: "Storage Cleaner",
-    icon: "🧹",
-    category: "tools",
-    tech: ["Python"],
-    size: "0.1 MB",
-    status: "active",
-    github: null,
-    description: "Python utility to clean up storage on Windows. Has run.bat for easy execution.",
-    runCmd: "run.bat  or  python storage_cleaner.py",
-    overview: "Simple Python script to identify and remove unnecessary files on Windows. Likely targets temp files, log files, or specific patterns.",
-    limitations: [
-      "No git repo",
-      "No preview/dry-run mode — could accidentally delete files",
-      "No GUI"
-    ],
-    next: [
-      "Add a dry-run flag to show what would be deleted before deleting",
-      "Add a GUI or interactive prompt",
-      "Initialise git and push to GitHub"
-    ]
-  },
-  {
-    id: "telegram-wakeup",
-    name: "Telegram Wake Up",
-    icon: "⏰",
-    category: "tools",
-    tech: ["HTML", "Telegram Bot API"],
-    size: "<1 MB",
-    status: "active",
-    github: "https://github.com/abcdanman/wake-up-alert",
-    description: "Telegram bot configuration UI. A single HTML page to configure wake-up alert settings sent via Telegram.",
-    runCmd: "Open config-form.html in browser",
-    overview: "Single-page HTML config form for a Telegram wake-up alert bot. Likely submits settings to a Telegram bot token endpoint.",
-    limitations: [
-      "Single HTML file — limited functionality",
-      "Bot token may be embedded in the page",
-      "No persistence — settings may reset on refresh"
-    ],
-    next: [
-      "Add localStorage to persist settings",
-      "Move bot token to a server-side proxy",
-      "Add scheduled alert management"
-    ]
+let projects = [], statusMap = {}, currentFilter = 'all', selectedId = null;
+let apiKey = localStorage.getItem('fyp_api_key') || '';
+if (apiKey) document.getElementById('ai-key').value = apiKey;
+
+document.getElementById('grid-wrap').innerHTML = '<div class="empty"><div class="empty-icon" style="font-size:32px;margin-bottom:8px">⏳</div><p>Loading projects...</p></div>';
+
+async function fetchStatus() {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 5000);
+  try {
+    const res = await fetch('/api/status', { signal: ctrl.signal });
+    clearTimeout(t);
+    const data = await res.json();
+    projects = data.projects;
+    statusMap = data.running || {};
+    renderGrid();
+    updateHeaderStats();
+  } catch(e) {
+    clearTimeout(t);
+    if (projects.length === 0) {
+      document.getElementById('grid-wrap').innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><p>Cannot reach server.<br>Make sure you opened this via <strong>start.bat</strong></p></div>';
+    }
   }
-];
-
-let currentProject = null;
-let apiKey = localStorage.getItem('claude_api_key') || '';
-
-function init() {
-  renderSidebar(PROJECTS);
-  showHome();
-  updateKeyStatus();
 }
 
-function renderSidebar(projects) {
-  const webEl = document.getElementById('sidebar-web');
-  const toolsEl = document.getElementById('sidebar-tools');
-  webEl.innerHTML = '';
-  toolsEl.innerHTML = '';
-  projects.forEach(p => {
-    const el = document.createElement('div');
-    el.className = 'proj-item' + (currentProject?.id === p.id ? ' active' : '');
-    el.id = 'sidebar-' + p.id;
-    el.onclick = () => showProject(p);
-    const statusBadge = p.github ? '' : '<span style="width:6px;height:6px;border-radius:50%;background:var(--amber);display:inline-block;margin-left:4px" title="No GitHub"></span>';
-    el.innerHTML = `<span class="proj-icon" style="background:var(--surface2)">${p.icon}</span>
-      <span class="proj-item-name">${p.name}${statusBadge}</span>
-      <span class="proj-item-size">${p.size}</span>`;
-    (p.category === 'web' ? webEl : toolsEl).appendChild(el);
+function updateHeaderStats() {
+  const running = Object.keys(statusMap).length;
+  document.getElementById('running-count').textContent = `${running} running`;
+  document.getElementById('total-count').textContent = `${projects.length} projects`;
+  document.getElementById('running-dot').style.background = running > 0 ? '#10b981' : '#a1a1aa';
+
+  const cats = { web: 0, mobile: 0, tools: 0 };
+  projects.forEach(p => { if (cats[p.category] !== undefined) cats[p.category]++; });
+  document.getElementById('count-all').textContent = projects.length;
+  document.getElementById('count-running').textContent = running;
+  document.getElementById('count-web').textContent = cats.web;
+  document.getElementById('count-mobile').textContent = cats.mobile;
+  document.getElementById('count-tools').textContent = cats.tools;
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.filter === f);
+  });
+  renderGrid();
+}
+
+function filtered() {
+  const q = document.getElementById('search').value.toLowerCase();
+  return projects.filter(p => {
+    if (currentFilter === 'running' && !statusMap[p.id]) return false;
+    if (currentFilter !== 'all' && currentFilter !== 'running' && p.category !== currentFilter) return false;
+    if (q && !p.name.toLowerCase().includes(q) && !p.tech.some(t => t.toLowerCase().includes(q))) return false;
+    return true;
   });
 }
 
-function filterProjects(q) {
-  const filtered = PROJECTS.filter(p => p.name.toLowerCase().includes(q.toLowerCase()) || p.tech.some(t => t.toLowerCase().includes(q.toLowerCase())));
-  renderSidebar(filtered);
+function renderGrid() {
+  const wrap = document.getElementById('grid-wrap');
+  const list = filtered();
+  if (!list.length) {
+    wrap.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><p>No projects match your filter.</p></div>';
+    return;
+  }
+
+  const cats = ['web', 'mobile', 'tools'];
+  const labels = { web: 'Web & Apps', mobile: 'Mobile', tools: 'Tools & Scripts' };
+  let html = '';
+
+  const grouped = {};
+  list.forEach(p => { (grouped[p.category] = grouped[p.category] || []).push(p); });
+
+  for (const cat of cats) {
+    if (!grouped[cat]) continue;
+    html += `<div class="section-label">${labels[cat]}</div><div class="grid">`;
+    for (const p of grouped[cat]) {
+      html += cardHTML(p);
+    }
+    html += '</div>';
+  }
+  wrap.innerHTML = html;
 }
 
-function showHome() {
-  currentProject = null;
-  document.getElementById('topbar-title').textContent = 'Overview — FYP UM Projects';
-  document.getElementById('analyse-btn').style.display = 'none';
-  document.getElementById('content').innerHTML = `
-    <div class="home-stats">
-      <div class="stat-card"><div class="stat-val">14</div><div class="stat-lbl">Total projects</div></div>
-      <div class="stat-card"><div class="stat-val" style="color:var(--amber)">5</div><div class="stat-lbl">Need GitHub</div></div>
-      <div class="stat-card"><div class="stat-val" style="color:var(--red)">3.7 GB</div><div class="stat-lbl">Reclaimable storage</div></div>
-      <div class="stat-card"><div class="stat-val" style="color:var(--green)">9</div><div class="stat-lbl">On GitHub</div></div>
-    </div>
-    <div style="margin-bottom:16px">
-      <div style="font-size:16px;font-weight:600;margin-bottom:4px">All Projects</div>
-      <div style="font-size:13px;color:var(--text2)">Click any card to view details and run AI analysis</div>
-    </div>
-    <div class="home-grid">
-      ${PROJECTS.map(p => `
-        <div class="home-card" onclick="showProject(PROJECTS.find(x=>x.id==='${p.id}'))">
-          <div class="home-card-icon">${p.icon}</div>
-          <div class="home-card-name">${p.name}</div>
-          <div class="home-card-meta">${p.tech.slice(0,2).join(' · ')} · ${p.size}</div>
-          <div style="margin-top:8px">${p.github ? '<span class="badge badge-green">On GitHub</span>' : '<span class="badge badge-amber">No GitHub</span>'}</div>
+function iconBg(color) {
+  return `${color}22`;
+}
+
+function cardHTML(p) {
+  const isRunning = !!statusMap[p.id];
+  const ptype = p.type || '';
+  const isStatic = ptype === 'static';
+  const isCloud = ptype === 'cloudflare';
+  const isMobile = p.category === 'mobile' && !p.url;
+  const note = p.note || '';
+  const runningClass = isRunning ? ' is-running' : '';
+  const selected = selectedId === p.id ? ' style="outline: 2px solid var(--primary); outline-offset: 2px;"' : '';
+
+  let statusHTML = '';
+  if (isRunning) {
+    statusHTML = `
+      <div class="card-status">
+        <div class="status-dot"></div>
+        <span class="status-text">Running</span>
+        ${p.url ? `<a class="status-open" href="${p.url}" target="_blank">Open ↗</a>` : ''}
+      </div>`;
+  } else {
+    statusHTML = `
+      <div class="card-status">
+        <div class="status-dot"></div>
+        <span class="status-text">Stopped</span>
+      </div>`;
+  }
+
+  let btnHTML = '';
+  if (isRunning) {
+    btnHTML = `<button class="btn-run btn-stop" id="btn-${p.id}" onclick="doStop('${p.id}')">⏹ Stop</button>`;
+  } else if (isStatic) {
+    btnHTML = `<button class="btn-run btn-open" id="btn-${p.id}" onclick="doOpen('${p.id}')">↗ Open in browser</button>`;
+  } else if (isCloud) {
+    btnHTML = `<button class="btn-run btn-info" id="btn-${p.id}" title="Deploy via Cloudflare">☁ wrangler deploy</button>`;
+  } else if (note && p.category === 'mobile') {
+    btnHTML = `<button class="btn-run btn-info" id="btn-${p.id}">📱 ${note.split('.')[0]}</button>`;
+  } else {
+    btnHTML = `<button class="btn-run" id="btn-${p.id}" onclick="doRun('${p.id}')">▶ Run</button>`;
+  }
+
+  const techChips = p.tech.map(t => `<span class="tech-chip">${t}</span>`).join('');
+  const ghLink = p.github
+    ? `<a class="footer-github" href="${p.github}" target="_blank">GitHub ↗</a>`
+    : `<span class="footer-github" style="color:var(--text3)">No GitHub</span>`;
+
+  return `
+    <div class="card${runningClass}" id="card-${p.id}" onclick="selectCard('${p.id}')"${selected}>
+      <div class="card-top">
+        <div class="card-icon" style="background:${iconBg(p.color)}">${p.icon}</div>
+        <div class="card-info">
+          <div class="card-name">${p.name}</div>
+          <div class="card-desc">${p.desc}</div>
         </div>
-      `).join('')}
+      </div>
+      <div class="card-tech">${techChips}</div>
+      ${statusHTML}
+      <div class="card-action">${btnHTML}</div>
+      <div class="card-footer">
+        <span class="footer-size">${p.size}</span>
+        ${ghLink}
+      </div>
     </div>`;
 }
 
-function showProject(p) {
-  currentProject = p;
-  document.getElementById('topbar-title').textContent = p.name;
-  document.getElementById('analyse-btn').style.display = 'inline-flex';
-  document.querySelectorAll('.proj-item').forEach(el => el.classList.remove('active'));
-  const sidebarItem = document.getElementById('sidebar-' + p.id);
-  if (sidebarItem) sidebarItem.classList.add('active');
+function selectCard(id) {
+  selectedId = id;
+  renderGrid();
+  const p = projects.find(x => x.id === id);
+  if (p) document.getElementById('ai-panel-title').textContent = `✨ ${p.name}`;
+}
 
-  const githubLink = p.github ? `<a href="${p.github}" target="_blank" style="color:var(--accent);text-decoration:none;font-size:13px">↗ ${p.github.replace('https://github.com/','')}</a>` : '<span style="color:var(--text3);font-size:13px">Not on GitHub yet</span>';
+async function doRun(id) {
+  const btn = document.getElementById(`btn-${id}`);
+  if (!btn) return;
+  btn.innerHTML = '<div class="spinner"></div> Starting…';
+  btn.className = 'btn-run btn-loading';
+  btn.disabled = true;
 
-  document.getElementById('content').innerHTML = `
-    <div class="proj-header">
-      <div class="proj-icon-lg" style="background:var(--surface2);font-size:26px">${p.icon}</div>
-      <div>
-        <div class="proj-title">${p.name}</div>
-        <div class="proj-desc">${p.description}</div>
-        <div class="badge-row">
-          ${p.tech.map(t => `<span class="badge badge-accent">${t}</span>`).join('')}
-          ${p.github ? '<span class="badge badge-green">On GitHub</span>' : '<span class="badge badge-amber">Needs GitHub</span>'}
-          <span class="badge badge-neutral">${p.size}</span>
-        </div>
-      </div>
-    </div>
+  try {
+    const res = await fetch(`/api/start/${id}`, { method: 'POST' });
+    const data = await res.json();
+    if (data.ok) {
+      if (!data.static) {
+        statusMap[id] = 'running';
+        showToast('Started! Opening in a few seconds…', 'success');
+      } else {
+        showToast('Opened in browser ✓', 'success');
+      }
+    } else {
+      showToast(data.error || 'Failed to start', 'error');
+    }
+  } catch(e) {
+    showToast('Server error', 'error');
+  }
+  await fetchStatus();
+}
 
-    <div class="section-grid">
-      <div class="stat-card"><div class="stat-val" style="font-size:14px;font-family:monospace">${p.runCmd.split('\n')[0]}</div><div class="stat-lbl">How to run</div></div>
-      <div class="stat-card"><div class="stat-val" style="font-size:13px">${githubLink}</div><div class="stat-lbl">GitHub</div></div>
-      <div class="stat-card"><div class="stat-val" style="font-size:13px">${p.size}</div><div class="stat-lbl">Folder size</div></div>
-    </div>
+async function doStop(id) {
+  const btn = document.getElementById(`btn-${id}`);
+  if (!btn) return;
+  btn.innerHTML = '<div class="spinner"></div> Stopping…';
+  btn.disabled = true;
 
-    <div class="card">
-      <div class="card-title">📋 Overview</div>
-      <div class="card-body">${p.overview}</div>
-    </div>
+  try {
+    const res = await fetch(`/api/stop/${id}`, { method: 'POST' });
+    const data = await res.json();
+    if (data.ok) {
+      delete statusMap[id];
+      showToast('Project stopped', 'success');
+    } else {
+      showToast(data.error || 'Failed to stop', 'error');
+    }
+  } catch(e) {
+    showToast('Server error', 'error');
+  }
+  await fetchStatus();
+}
 
-    <div class="card">
-      <div class="card-title">⚠️ Known Limitations</div>
-      <div class="card-body"><ul>${p.limitations.map(l=>`<li>${l}</li>`).join('')}</ul></div>
-    </div>
+async function doOpen(id) {
+  await fetch(`/api/start/${id}`, { method: 'POST' });
+  showToast('Opening in browser…', 'success');
+}
 
-    <div class="card">
-      <div class="card-title">🚀 What's Next</div>
-      <div class="card-body"><ul>${p.next.map(n=>`<li>${n}</li>`).join('')}</ul></div>
-    </div>
+async function stopServer() {
+  if (!confirm('Stop the Project Organiser server?')) return;
+  await fetch('/api/shutdown', { method: 'POST' }).catch(() => {});
+  showToast('Server stopped. You can close this tab.', 'success');
+}
 
-    <div class="ai-box" id="ai-section">
-      <div class="ai-header">
-        <div class="ai-label">✨ AI Analysis</div>
-        <button class="btn btn-accent" onclick="analyseProject()">Analyse this project</button>
-      </div>
-      <div class="ai-content"><p class="ai-placeholder">Click "Analyse this project" to get a deeper AI analysis powered by Claude. Make sure your API key is set.</p></div>
-    </div>`;
+function openAiPanel() {
+  document.getElementById('ai-panel').classList.add('open');
+  document.getElementById('overlay').classList.add('active');
+}
+function closeAiPanel() {
+  document.getElementById('ai-panel').classList.remove('open');
+  document.getElementById('overlay').classList.remove('active');
+}
+
+function saveKey() {
+  apiKey = document.getElementById('ai-key').value.trim();
+  localStorage.setItem('fyp_api_key', apiKey);
+  showToast('API key saved ✓', 'success');
 }
 
 async function analyseProject() {
-  if (!currentProject) return;
-  if (!apiKey) { showApiKeyModal(); return; }
+  if (!apiKey) { showToast('Enter your Claude API key first', 'error'); return; }
+  const p = selectedId ? projects.find(x => x.id === selectedId) : null;
+  if (!p) { showToast('Click a project card first', 'error'); return; }
 
-  const aiSection = document.getElementById('ai-section');
-  aiSection.querySelector('.ai-header').innerHTML = `<div class="ai-label">✨ AI Analysis</div><div class="spinner"></div>`;
-  aiSection.querySelector('.ai-content').innerHTML = '<p class="ai-placeholder">Analysing with Claude...</p>';
+  const btn = document.getElementById('ai-btn');
+  btn.textContent = 'Analysing…';
+  btn.disabled = true;
+  document.getElementById('ai-result').innerHTML = '<p class="ai-placeholder">Asking Claude…</p>';
 
-  const prompt = `You are reviewing a software project called "${currentProject.name}".
+  const prompt = `You are a senior developer reviewing a project.
 
-Tech stack: ${currentProject.tech.join(', ')}
-Description: ${currentProject.description}
-Overview: ${currentProject.overview}
-Known limitations so far: ${currentProject.limitations.join('; ')}
-What's planned: ${currentProject.next.join('; ')}
+Project: "${p.name}"
+Tech: ${p.tech.join(', ')}
+Description: ${p.desc}
+Category: ${p.category}
+Size: ${p.size}
 
-Please provide:
-1. A concise technical overview (2-3 sentences) from a senior developer perspective
-2. Top 3 real technical limitations or risks to be aware of
-3. Top 3 concrete next steps, prioritised by impact
-4. One "quick win" — something that takes under an hour that would meaningfully improve the project
+Give me:
+## Overview
+2–3 sentence technical summary.
 
-Format your response in markdown with headers: ## Overview, ## Limitations, ## Next Steps, ## Quick Win`;
+## Limitations
+3 real technical risks or gaps.
+
+## What's Next
+3 high-impact next steps, most impactful first.
+
+## Quick Win
+One thing under 1 hour that would meaningfully improve it.
+
+Be direct and specific. Skip generic advice.`;
 
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -635,66 +637,43 @@ Format your response in markdown with headers: ## Overview, ## Limitations, ## N
         'Content-Type': 'application/json',
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'anthropic-dangerous-direct-browser-access': 'true',
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 800,
-        messages: [{ role: 'user', content: prompt }]
-      })
+        max_tokens: 700,
+        messages: [{ role: 'user', content: prompt }],
+      }),
     });
-
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error?.message || 'API error');
-    }
-
+    if (!res.ok) throw new Error((await res.json()).error?.message || 'API error');
     const data = await res.json();
     const text = data.content[0].text;
     const html = text
       .replace(/## (.+)/g, '<h4>$1</h4>')
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/^- (.+)/gm, '<li>$1</li>')
-      .replace(/(<li>.*<\/li>\n?)+/g, m => `<ul>${m}</ul>`)
-      .replace(/\n\n/g, '<br><br>')
-      .replace(/\n/g, ' ');
-
-    aiSection.querySelector('.ai-header').innerHTML = `<div class="ai-label">✨ AI Analysis — Claude</div><button class="btn" onclick="analyseProject()" style="font-size:12px">Refresh</button>`;
-    aiSection.querySelector('.ai-content').innerHTML = html;
+      .replace(/^[-•] (.+)/gm, '<li>$1</li>')
+      .replace(/^\d+\. (.+)/gm, '<li>$1</li>')
+      .replace(/(<li>[\s\S]*?<\/li>\n?)+/g, m => `<ul>${m}</ul>`)
+      .replace(/\n\n/g, '<br>');
+    document.getElementById('ai-result').innerHTML = `<div class="ai-result">${html}</div>`;
   } catch(e) {
-    aiSection.querySelector('.ai-header').innerHTML = `<div class="ai-label">✨ AI Analysis</div><button class="btn btn-accent" onclick="analyseProject()">Retry</button>`;
-    aiSection.querySelector('.ai-content').innerHTML = `<p style="color:var(--red)">Error: ${e.message}. Check your API key and try again.</p>`;
+    document.getElementById('ai-result').innerHTML = `<p class="ai-placeholder" style="color:var(--red)">${e.message}</p>`;
   }
+  btn.textContent = 'Analyse selected project';
+  btn.disabled = false;
 }
 
-function showApiKeyModal() {
-  document.getElementById('key-input').value = apiKey;
-  document.getElementById('key-modal').classList.remove('hidden');
-}
-function closeModal() { document.getElementById('key-modal').classList.add('hidden'); }
-function saveKey() {
-  apiKey = document.getElementById('key-input').value.trim();
-  localStorage.setItem('claude_api_key', apiKey);
-  updateKeyStatus();
-  closeModal();
-}
-function updateKeyStatus() {
-  document.getElementById('key-status').textContent = apiKey ? '✓ API Key Set' : 'Set API Key';
+let toastTimer;
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = type ? `show ${type}` : 'show';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.className = '', 3000);
 }
 
-function toggleTheme() {
-  const body = document.body;
-  const isDark = body.getAttribute('data-theme') === 'dark';
-  body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-  document.getElementById('theme-icon').textContent = isDark ? '🌙' : '☀️';
-  document.getElementById('theme-label').textContent = isDark ? 'Dark mode' : 'Light mode';
-}
-
-document.getElementById('key-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-
-init();
+fetchStatus();
+setInterval(fetchStatus, 2500);
 </script>
 </body>
 </html>
